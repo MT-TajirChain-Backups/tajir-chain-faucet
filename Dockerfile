@@ -27,11 +27,11 @@ RUN CGO_ENABLED=0 go build -o eth-faucet -ldflags "-s -w -X github.com/Tajir-Cha
 
 FROM alpine:3.21
 
-RUN apk add --no-cache ca-certificates
+RUN apk update && apk upgrade --no-cache
 
+WORKDIR /app
 COPY --from=backend /backend-build/eth-faucet /app/eth-faucet
 
 EXPOSE 8080
-
 ENTRYPOINT ["/app/eth-faucet"]
 CMD ["-wallet.provider", "https://ethereum-sepolia.publicnode.com", "-wallet.privkey", "f9c40c9e559be901fb2342089b45b34666843ae1d5ecdc133ceddbedc3dc6281", "-faucet.name", "sepolia", "-faucet.amount", "100000000000000000", "-faucet.minutes", "1", "-frontend.logo", "/logo.svg", "-faucet.paidcustomer", "true"]
